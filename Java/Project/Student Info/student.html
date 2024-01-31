@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Data</title>
+</head>
+<body>
+    <h1>Student Data</h1>
+    <form>
+        <label for="student_id">Enter Student ID:</label>
+        <input type="text" id="student_id" name="student_id" required>
+        <button type="button" onclick="getStudentData()">Get Data</button>
+    </form>
+    <div id="studentInfo">
+        <!-- Student data will be displayed here -->
+    </div>
+
+    <script>
+        function getStudentData() {
+            const studentId = document.getElementById("student_id").value;
+            const studentInfo = document.getElementById("studentInfo");
+
+            fetch(`/api/score?student_id=${studentId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        studentInfo.innerHTML = `<p>${data.error}</p>`;
+                    } else {
+                        studentInfo.innerHTML = `
+                            <p><strong>Student ID:</strong> ${data.Student_ID}</p>
+                            <p><strong>Student Name:</strong> ${data.Student_Name}</p>
+                            <p><strong>Score:</strong> ${data.Score}</p>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    studentInfo.innerHTML = `<p>An error occurred while fetching data.</p>`;
+                });
+        }
+    </script>
+</body>
+</html>
